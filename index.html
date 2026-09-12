@@ -1,0 +1,4507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#080b12">
+<title>NEXA — Mathematics Intelligence</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+  --bg:#070910;
+  --bg2:#0b0f18;
+  --panel:rgba(17,22,34,.78);
+  --panel2:rgba(23,29,43,.82);
+  --line:rgba(255,255,255,.08);
+  --text:#f7f9ff;
+  --muted:#8e99ad;
+  --cyan:#6ee7ff;
+  --blue:#6b8cff;
+  --purple:#9b7cff;
+  --green:#6ef3b2;
+  --orange:#ffbd73;
+  --red:#ff7187;
+  --shadow:0 30px 100px rgba(0,0,0,.45);
+  --radius:24px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:
+    radial-gradient(circle at 15% 10%,rgba(110,231,255,.08),transparent 28%),
+    radial-gradient(circle at 85% 15%,rgba(155,124,255,.10),transparent 30%),
+    radial-gradient(circle at 50% 90%,rgba(107,140,255,.06),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:Cairo,Inter,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+button,input,textarea{font:inherit}
+
+button{cursor:pointer}
+
+::selection{
+  background:rgba(110,231,255,.25);
+  color:#fff;
+}
+
+::-webkit-scrollbar{width:7px}
+::-webkit-scrollbar-track{background:#080b12}
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(var(--cyan),var(--purple));
+  border-radius:99px;
+}
+
+/* BACKGROUND */
+
+.bg-grid{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.23;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:linear-gradient(to bottom,black,transparent 90%);
+}
+
+.orb{
+  position:fixed;
+  width:420px;
+  height:420px;
+  border-radius:50%;
+  filter:blur(100px);
+  opacity:.08;
+  pointer-events:none;
+}
+
+.orb.one{
+  background:var(--cyan);
+  top:-180px;
+  right:-100px;
+}
+
+.orb.two{
+  background:var(--purple);
+  bottom:-220px;
+  left:-120px;
+}
+
+/* APP */
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+  position:fixed;
+  right:0;
+  top:0;
+  bottom:0;
+  width:285px;
+  padding:25px 18px;
+  border-left:1px solid var(--line);
+  background:rgba(7,9,16,.72);
+  backdrop-filter:blur(24px);
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:5px 10px 28px;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:
+    linear-gradient(135deg,rgba(110,231,255,.18),rgba(155,124,255,.18)),
+    #101522;
+  border:1px solid rgba(110,231,255,.25);
+  box-shadow:0 10px 35px rgba(110,231,255,.08);
+  font-weight:900;
+  font-size:19px;
+  letter-spacing:-1px;
+}
+
+.brand h1{
+  font-size:20px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+
+.brand span{
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.nav-title{
+  color:#596479;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  padding:14px 12px 8px;
+}
+
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.nav button{
+  border:1px solid transparent;
+  background:transparent;
+  color:#8994a8;
+  padding:13px 14px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-align:right;
+  transition:.25s;
+}
+
+.nav button:hover{
+  background:rgba(255,255,255,.035);
+  color:#fff;
+}
+
+.nav button.active{
+  color:#fff;
+  background:
+    linear-gradient(135deg,rgba(110,231,255,.09),rgba(155,124,255,.09));
+  border-color:rgba(110,231,255,.12);
+  box-shadow:inset 3px 0 0 var(--cyan);
+}
+
+.nav-icon{
+  width:34px;
+  height:34px;
+  border-radius:11px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.04);
+  font-size:15px;
+}
+
+.side-bottom{
+  margin-top:auto;
+  padding:15px 10px 5px;
+}
+
+.progress-mini{
+  padding:16px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+  border-radius:18px;
+}
+
+.progress-mini .top{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:var(--muted);
+}
+
+.progress-bar{
+  height:5px;
+  border-radius:20px;
+  background:#1a2030;
+  margin-top:10px;
+  overflow:hidden;
+}
+
+.progress-bar i{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  border-radius:20px;
+  transition:.5s;
+}
+
+/* MAIN */
+
+.main{
+  margin-right:285px;
+  width:calc(100% - 285px);
+  min-height:100vh;
+}
+
+.topbar{
+  height:76px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 38px;
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:rgba(7,9,16,.68);
+  backdrop-filter:blur(24px);
+}
+
+.breadcrumb{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.breadcrumb b{color:#fff}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#93a0b5;
+  font-size:11px;
+}
+
+.status-dot{
+  width:7px;
+  height:7px;
+  background:var(--green);
+  border-radius:50%;
+  box-shadow:0 0 14px var(--green);
+}
+
+.content{
+  max-width:1450px;
+  margin:auto;
+  padding:42px 42px 80px;
+}
+
+/* VIEWS */
+
+.view{display:none}
+.view.active{
+  display:block;
+  animation:pageIn .45s ease;
+}
+
+@keyframes pageIn{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:none}
+}
+
+/* HOME */
+
+.hero{
+  min-height:430px;
+  border:1px solid var(--line);
+  border-radius:32px;
+  background:
+    radial-gradient(circle at 85% 30%,rgba(110,231,255,.12),transparent 28%),
+    radial-gradient(circle at 25% 80%,rgba(155,124,255,.09),transparent 30%),
+    linear-gradient(145deg,rgba(17,22,34,.9),rgba(9,12,20,.88));
+  position:relative;
+  overflow:hidden;
+  padding:55px;
+  display:flex;
+  align-items:center;
+  box-shadow:var(--shadow);
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  border:1px solid rgba(110,231,255,.08);
+  border-radius:50%;
+  left:-160px;
+  bottom:-290px;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  width:350px;
+  height:350px;
+  border:1px solid rgba(155,124,255,.08);
+  border-radius:50%;
+  right:-100px;
+  top:-170px;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:720px;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:var(--cyan);
+  background:rgba(110,231,255,.07);
+  border:1px solid rgba(110,231,255,.12);
+  border-radius:99px;
+  padding:7px 12px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-bottom:20px;
+}
+
+.hero h2{
+  font-size:clamp(40px,5vw,78px);
+  line-height:1;
+  letter-spacing:-3px;
+  font-weight:900;
+}
+
+.gradient-text{
+  background:linear-gradient(100deg,#fff 0%,var(--cyan) 45%,#b5a2ff 90%);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  color:#8d98ac;
+  font-size:15px;
+  line-height:2;
+  max-width:650px;
+  margin-top:23px;
+}
+
+.hero-actions{
+  display:flex;
+  gap:10px;
+  margin-top:30px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.045);
+  color:#fff;
+  padding:13px 18px;
+  border-radius:14px;
+  transition:.25s;
+  font-weight:700;
+  font-size:12px;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(110,231,255,.25);
+}
+
+.btn.primary{
+  border:none;
+  background:linear-gradient(100deg,var(--cyan),var(--blue));
+  color:#061018;
+  box-shadow:0 12px 35px rgba(110,231,255,.14);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:18px;
+}
+
+.stat{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+  border-radius:20px;
+  padding:19px;
+}
+
+.stat strong{
+  display:block;
+  font-size:26px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:10px;
+}
+
+/* SECTION */
+
+.section-head{
+  margin:45px 0 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+}
+
+.section-head h3{
+  font-size:22px;
+}
+
+.section-head p{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+
+.card{
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:23px;
+  padding:24px;
+  transition:.3s;
+  position:relative;
+  overflow:hidden;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(110,231,255,.18);
+  box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+.card-number{
+  color:#58647a;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.card h4{
+  font-size:18px;
+  margin:9px 0;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.9;
+}
+
+.card-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:18px;
+}
+
+.tag{
+  padding:5px 9px;
+  border-radius:8px;
+  background:rgba(110,231,255,.06);
+  color:var(--cyan);
+  font-size:9px;
+  font-weight:800;
+}
+
+/* CURRICULUM */
+
+.page-title{
+  margin-bottom:30px;
+}
+
+.page-title .eyebrow{margin-bottom:12px}
+
+.page-title h2{
+  font-size:40px;
+  letter-spacing:-1.5px;
+}
+
+.page-title p{
+  color:var(--muted);
+  margin-top:7px;
+  font-size:13px;
+}
+
+.semester-switch{
+  display:flex;
+  gap:8px;
+  margin-bottom:25px;
+  padding:6px;
+  width:max-content;
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+
+.semester-switch button{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:10px 18px;
+  border-radius:11px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.semester-switch button.active{
+  background:rgba(110,231,255,.1);
+  color:var(--cyan);
+}
+
+.unit{
+  border:1px solid var(--line);
+  border-radius:25px;
+  background:rgba(14,18,28,.76);
+  margin-bottom:16px;
+  overflow:hidden;
+}
+
+.unit-head{
+  padding:22px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+}
+
+.unit-title{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.unit-index{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,rgba(110,231,255,.1),rgba(155,124,255,.1));
+  color:var(--cyan);
+  font-weight:900;
+}
+
+.unit h3{font-size:16px}
+.unit small{color:var(--muted);font-size:10px}
+
+.unit-arrow{
+  color:#667186;
+  transition:.3s;
+}
+
+.unit.open .unit-arrow{transform:rotate(180deg)}
+
+.lessons{
+  display:none;
+  border-top:1px solid var(--line);
+  padding:9px;
+}
+
+.unit.open .lessons{
+  display:block;
+  animation:drop .3s ease;
+}
+
+@keyframes drop{
+  from{opacity:0;transform:translateY(-5px)}
+  to{opacity:1;transform:none}
+}
+
+.lesson{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:17px;
+  border-radius:16px;
+  transition:.2s;
+  cursor:pointer;
+}
+
+.lesson:hover{
+  background:rgba(255,255,255,.035);
+}
+
+.lesson-info{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.lesson-icon{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.035);
+  color:#9ba7bb;
+}
+
+.lesson h4{font-size:12px}
+.lesson p{font-size:9px;color:var(--muted);margin-top:3px}
+
+.lesson-status{
+  font-size:9px;
+  color:#596579;
+}
+
+.lesson.done .lesson-status{color:var(--green)}
+
+/* LESSON VIEW */
+
+.lesson-shell{
+  max-width:1000px;
+  margin:auto;
+}
+
+.lesson-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.back{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+  color:#c3cad7;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:11px;
+}
+
+.lesson-progress{
+  width:180px;
+}
+
+.lesson-progress-top{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:9px;
+  margin-bottom:7px;
+}
+
+.lesson-progress-bar{
+  height:4px;
+  background:#1b2130;
+  border-radius:99px;
+}
+
+.lesson-progress-bar i{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  border-radius:99px;
+  transition:.4s;
+}
+
+.lesson-cover{
+  padding:42px;
+  border:1px solid var(--line);
+  border-radius:30px;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(110,231,255,.12),transparent 30%),
+    radial-gradient(circle at 10% 90%,rgba(155,124,255,.09),transparent 35%),
+    var(--panel);
+}
+
+.lesson-cover h1{
+  font-size:42px;
+  letter-spacing:-1.5px;
+  margin-bottom:12px;
+}
+
+.lesson-cover p{
+  color:var(--muted);
+  line-height:2;
+  font-size:13px;
+}
+
+.lesson-meta{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.lesson-body{
+  margin-top:16px;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:rgba(13,17,27,.8);
+  padding:35px;
+}
+
+.slide{
+  display:none;
+}
+
+.slide.active{
+  display:block;
+  animation:pageIn .35s ease;
+}
+
+.slide h2{
+  font-size:27px;
+  margin-bottom:14px;
+}
+
+.slide h3{
+  margin:25px 0 10px;
+  font-size:17px;
+}
+
+.slide p{
+  color:#aab3c3;
+  line-height:2.1;
+  font-size:13px;
+}
+
+.math-box{
+  direction:ltr;
+  text-align:center;
+  font-family:Inter,Cairo,sans-serif;
+  font-size:27px;
+  color:#fff;
+  padding:25px;
+  border:1px solid rgba(110,231,255,.12);
+  background:rgba(110,231,255,.025);
+  border-radius:19px;
+  margin:20px 0;
+}
+
+.example{
+  border-right:3px solid var(--cyan);
+  padding:16px 18px;
+  background:rgba(255,255,255,.025);
+  border-radius:0 15px 15px 0;
+  margin:16px 0;
+}
+
+.example strong{font-size:12px}
+.example p{margin-top:7px}
+
+.lesson-nav{
+  display:flex;
+  justify-content:space-between;
+  margin-top:17px;
+}
+
+.ai-mini{
+  margin-top:17px;
+  border:1px solid rgba(155,124,255,.13);
+  background:linear-gradient(135deg,rgba(155,124,255,.05),rgba(110,231,255,.04));
+  border-radius:22px;
+  padding:20px;
+}
+
+.ai-mini-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.ai-dot{
+  width:33px;
+  height:33px;
+  border-radius:11px;
+  display:grid;
+  place-items:center;
+  background:rgba(155,124,255,.1);
+  color:#c1b4ff;
+  font-weight:900;
+}
+
+.ai-mini h4{font-size:12px}
+.ai-mini span{display:block;color:var(--muted);font-size:9px}
+
+.ai-mini p{
+  margin-top:13px;
+  font-size:11px;
+}
+
+/* QUIZ */
+
+.quiz-shell{
+  max-width:950px;
+  margin:auto;
+}
+
+.quiz-card{
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:28px;
+  overflow:hidden;
+}
+
+.quiz-head{
+  padding:25px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+}
+
+.quiz-count{color:var(--muted);font-size:10px}
+
+.difficulty{
+  color:var(--orange);
+  font-size:10px;
+}
+
+.question{
+  padding:35px;
+}
+
+.question h2{
+  font-size:23px;
+  line-height:1.8;
+}
+
+.question-math{
+  direction:ltr;
+  text-align:center;
+  font-family:Inter,sans-serif;
+  font-size:29px;
+  margin:25px 0;
+  padding:25px;
+  border-radius:18px;
+  background:#0b0f18;
+  border:1px solid var(--line);
+}
+
+.answers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.answer{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+  color:#d8deea;
+  padding:17px;
+  border-radius:15px;
+  text-align:right;
+  transition:.2s;
+}
+
+.answer:hover{
+  border-color:rgba(110,231,255,.3);
+  transform:translateY(-2px);
+}
+
+.answer.correct{
+  border-color:rgba(110,243,178,.5);
+  background:rgba(110,243,178,.08);
+  color:#8dffc7;
+}
+
+.answer.wrong{
+  border-color:rgba(255,113,135,.5);
+  background:rgba(255,113,135,.07);
+  color:#ff9aac;
+}
+
+.quiz-explanation{
+  display:none;
+  margin-top:20px;
+  padding:17px;
+  border-radius:15px;
+  background:rgba(255,255,255,.025);
+  color:#aab4c5;
+  font-size:11px;
+  line-height:2;
+}
+
+.quiz-explanation.show{display:block}
+
+.quiz-bottom{
+  padding:20px 35px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.score-screen{
+  text-align:center;
+  padding:60px 30px;
+}
+
+.score-ring{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  margin:0 auto 25px;
+  border:1px solid rgba(110,231,255,.2);
+  background:radial-gradient(circle,rgba(110,231,255,.08),transparent 70%);
+}
+
+.score-ring strong{
+  font-size:38px;
+}
+
+/* AI */
+
+.ai-layout{
+  display:grid;
+  grid-template-columns:290px 1fr;
+  gap:16px;
+  height:calc(100vh - 165px);
+  min-height:620px;
+}
+
+.ai-context{
+  border:1px solid var(--line);
+  border-radius:25px;
+  background:var(--panel);
+  padding:20px;
+  overflow:auto;
+}
+
+.ai-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--line);
+}
+
+.ai-brand-icon{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(110,231,255,.12),rgba(155,124,255,.12));
+  color:var(--cyan);
+  font-weight:900;
+}
+
+.ai-brand h3{font-size:15px}
+.ai-brand p{font-size:9px;color:var(--muted)}
+
+.context-block{
+  margin-top:20px;
+}
+
+.context-block label{
+  display:block;
+  color:#59657a;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+
+.context-card{
+  padding:13px;
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line);
+}
+
+.context-card strong{
+  display:block;
+  font-size:11px;
+}
+
+.context-card span{
+  color:var(--muted);
+  font-size:9px;
+}
+
+.ai-main{
+  border:1px solid var(--line);
+  border-radius:25px;
+  background:rgba(12,16,25,.78);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+.ai-main-head{
+  padding:17px 20px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.ai-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.ai-title strong{font-size:13px}
+.ai-title span{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+}
+
+.ai-online{
+  font-size:9px;
+  color:var(--green);
+}
+
+.chat{
+  flex:1;
+  overflow:auto;
+  padding:25px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.welcome{
+  margin:auto;
+  max-width:620px;
+  text-align:center;
+  padding:30px 10px;
+}
+
+.welcome-logo{
+  width:64px;
+  height:64px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  margin:0 auto 18px;
+  background:linear-gradient(135deg,rgba(110,231,255,.13),rgba(155,124,255,.13));
+  border:1px solid rgba(110,231,255,.15);
+  font-size:23px;
+  font-weight:900;
+}
+
+.welcome h2{
+  font-size:29px;
+  letter-spacing:-1px;
+}
+
+.welcome p{
+  color:var(--muted);
+  font-size:11px;
+  line-height:2;
+  margin-top:8px;
+}
+
+.quick{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:20px;
+}
+
+.quick button{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+  color:#9ba6b9;
+  padding:9px 12px;
+  border-radius:12px;
+  font-size:9px;
+}
+
+.message{
+  display:flex;
+  gap:10px;
+  max-width:82%;
+  animation:msg .3s ease;
+}
+
+@keyframes msg{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
+
+.message.user{
+  margin-right:auto;
+  flex-direction:row-reverse;
+}
+
+.message.ai{
+  margin-left:auto;
+}
+
+.avatar{
+  width:32px;
+  height:32px;
+  min-width:32px;
+  border-radius:11px;
+  display:grid;
+  place-items:center;
+  background:#111725;
+  border:1px solid var(--line);
+  font-size:10px;
+  font-weight:900;
+}
+
+.message.user .avatar{
+  background:rgba(110,231,255,.08);
+  color:var(--cyan);
+}
+
+.bubble{
+  padding:12px 15px;
+  border-radius:17px;
+  background:rgba(255,255,255,.035);
+  border:1px solid var(--line);
+  color:#d9dfeb;
+  font-size:11px;
+  line-height:2;
+}
+
+.message.user .bubble{
+  background:rgba(110,231,255,.055);
+  border-color:rgba(110,231,255,.1);
+}
+
+.bubble strong{color:#fff}
+.bubble .formula{
+  direction:ltr;
+  text-align:center;
+  display:block;
+  font-family:Inter,sans-serif;
+  font-size:17px;
+  margin:8px 0;
+}
+
+.thinking{
+  display:none;
+  padding:0 25px 12px;
+}
+
+.thinking.show{display:flex}
+
+.thinking-inner{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#68758b;
+  font-size:9px;
+}
+
+.think-dots{
+  display:flex;
+  gap:4px;
+}
+
+.think-dots i{
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:var(--cyan);
+  animation:think 1s infinite;
+}
+
+.think-dots i:nth-child(2){animation-delay:.15s}
+.think-dots i:nth-child(3){animation-delay:.3s}
+
+@keyframes think{
+  0%,100%{opacity:.2;transform:translateY(0)}
+  50%{opacity:1;transform:translateY(-3px)}
+}
+
+.composer{
+  padding:15px;
+  border-top:1px solid var(--line);
+  background:rgba(7,9,15,.55);
+}
+
+.composer-box{
+  display:flex;
+  align-items:end;
+  gap:9px;
+  border:1px solid var(--line);
+  background:#0c111b;
+  border-radius:17px;
+  padding:8px;
+}
+
+.composer textarea{
+  flex:1;
+  resize:none;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#fff;
+  min-height:40px;
+  max-height:120px;
+  padding:8px;
+  font-size:11px;
+}
+
+.send{
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  color:#061018;
+  font-weight:900;
+}
+
+/* PROFILE */
+
+.profile-grid{
+  display:grid;
+  grid-template-columns:1.4fr .6fr;
+  gap:16px;
+}
+
+.profile-card{
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:25px;
+  padding:28px;
+}
+
+.profile-card h3{
+  font-size:17px;
+  margin-bottom:20px;
+}
+
+.big-progress{
+  height:12px;
+  border-radius:20px;
+  background:#1b2130;
+  overflow:hidden;
+}
+
+.big-progress i{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+}
+
+.profile-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:20px;
+}
+
+.profile-stat{
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:15px;
+}
+
+.profile-stat strong{
+  display:block;
+  font-size:21px;
+}
+
+.profile-stat span{
+  color:var(--muted);
+  font-size:9px;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  left:25px;
+  bottom:25px;
+  padding:13px 17px;
+  background:#101623;
+  border:1px solid var(--line);
+  color:#dce3ef;
+  border-radius:14px;
+  font-size:10px;
+  opacity:0;
+  transform:translateY(15px);
+  pointer-events:none;
+  transition:.3s;
+  z-index:100;
+}
+
+.toast.show{
+  opacity:1;
+  transform:none;
+}
+
+/* MOBILE */
+
+.mobile-top{
+  display:none;
+}
+
+@media(max-width:1050px){
+  .sidebar{
+    width:235px;
+  }
+
+  .main{
+    margin-right:235px;
+    width:calc(100% - 235px);
+  }
+
+  .content{
+    padding:30px 24px 60px;
+  }
+
+  .ai-layout{
+    grid-template-columns:1fr;
+    height:auto;
+  }
+
+  .ai-context{
+    display:none;
+  }
+}
+
+@media(max-width:760px){
+  .sidebar{
+    transform:translateX(110%);
+    transition:.3s;
+    width:285px;
+  }
+
+  .sidebar.open{
+    transform:none;
+  }
+
+  .main{
+    margin-right:0;
+    width:100%;
+  }
+
+  .topbar{
+    padding:0 17px;
+  }
+
+  .mobile-top{
+    display:block;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.04);
+    color:#fff;
+    width:38px;
+    height:38px;
+    border-radius:12px;
+  }
+
+  .content{
+    padding:24px 15px 50px;
+  }
+
+  .hero{
+    padding:30px 22px;
+    min-height:420px;
+  }
+
+  .hero h2{
+    font-size:43px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .cards{
+    grid-template-columns:1fr;
+  }
+
+  .page-title h2{
+    font-size:31px;
+  }
+
+  .lesson-cover{
+    padding:27px 22px;
+  }
+
+  .lesson-cover h1{
+    font-size:31px;
+  }
+
+  .lesson-body{
+    padding:22px 17px;
+  }
+
+  .answers{
+    grid-template-columns:1fr;
+  }
+
+  .question{
+    padding:22px;
+  }
+
+  .quiz-bottom{
+    padding:16px 22px;
+  }
+
+  .profile-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg-grid"></div>
+<div class="orb one"></div>
+<div class="orb two"></div>
+
+<div class="app">
+
+<aside class="sidebar" id="sidebar">
+
+  <div class="brand">
+    <div class="logo">NX</div>
+    <div>
+      <h1>NEXA</h1>
+      <span>Mathematics Intelligence</span>
+    </div>
+  </div>
+
+  <div class="nav-title">SPACE</div>
+
+  <nav class="nav">
+
+    <button class="active" data-view="home">
+      <div class="nav-icon">⌂</div>
+      <span>الرئيسية</span>
+    </button>
+
+    <button data-view="curriculum">
+      <div class="nav-icon">∑</div>
+      <span>المنهاج</span>
+    </button>
+
+    <button data-view="ai">
+      <div class="nav-icon">✦</div>
+      <span>NEXA AI</span>
+    </button>
+
+    <button data-view="profile">
+      <div class="nav-icon">◉</div>
+      <span>تقدمي</span>
+    </button>
+
+  </nav>
+
+  <div class="nav-title">YOUR LEARNING</div>
+
+  <div class="side-bottom">
+
+    <div class="progress-mini">
+      <div class="top">
+        <span>إتقان المنهاج</span>
+        <span id="sidePercent">0%</span>
+      </div>
+
+      <div class="progress-bar">
+        <i id="sideProgress"></i>
+      </div>
+    </div>
+
+  </div>
+
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+
+  <div style="display:flex;align-items:center;gap:12px">
+
+    <button class="mobile-top" onclick="toggleSidebar()">☰</button>
+
+    <div class="breadcrumb" id="breadcrumb">
+      NEXA <span>›</span> <b>الرئيسية</b>
+    </div>
+
+  </div>
+
+  <div class="status">
+    <i class="status-dot"></i>
+    NEXA SYSTEM READY
+  </div>
+
+</header>
+
+<div class="content">
+
+<!-- HOME -->
+
+<section class="view active" id="view-home">
+
+  <div class="hero">
+
+    <div class="hero-content">
+
+      <div class="eyebrow">
+        <span>✦</span>
+        NEXA LEARNING ENGINE
+      </div>
+
+      <h2>
+        الرياضيات،<br>
+        <span class="gradient-text">بطريقة مختلفة.</span>
+      </h2>
+
+      <p>
+        منصة ذكية مصممة لتجعلك تفهم الفكرة قبل أن تحفظها.
+        ادرس الدرس، اسأل NEXA AI، جرّب الأمثلة، ثم اختبر نفسك
+        في أسئلة تتدرج من الفهم إلى التفكير المتقدم.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn primary" onclick="openCurriculum()">
+          ابدأ التعلم
+        </button>
+
+        <button class="btn" onclick="openAI()">
+          اسأل NEXA AI ✦
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+      <strong id="statLessons">0</strong>
+      <span>درس متاح</span>
+    </div>
+
+    <div class="stat">
+      <strong id="statDone">0</strong>
+      <span>دروس مكتملة</span>
+    </div>
+
+    <div class="stat">
+      <strong id="statTests">0</strong>
+      <span>اختبارات</span>
+    </div>
+
+    <div class="stat">
+      <strong id="statMastery">0%</strong>
+      <span>نسبة الإتقان</span>
+    </div>
+
+  </div>
+
+  <div class="section-head">
+    <div>
+      <h3>كيف تعمل NEXA؟</h3>
+      <p>ليست مجرد صفحة أسئلة.</p>
+    </div>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <span class="card-number">01 / UNDERSTAND</span>
+      <h4>افهم الفكرة أولًا</h4>
+      <p>
+        كل درس مقسم إلى خطوات صغيرة: فكرة، لماذا تعمل،
+        مثال، ملاحظة، ثم تطبيق.
+      </p>
+      <div class="card-foot">
+        <span class="tag">CONCEPT</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-number">02 / ASK</span>
+      <h4>اسأل NEXA AI</h4>
+      <p>
+        إذا لم تفهم، لا تنتقل مباشرة. اسأل بأي طريقة
+        تعرفها، بالعربي أو بالإنجليزي، وسيحاول المحرك
+        تحديد ما تحتاجه.
+      </p>
+      <div class="card-foot">
+        <span class="tag">AI</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-number">03 / PRACTICE</span>
+      <h4>طبّق بطريقة ذكية</h4>
+      <p>
+        لا تبدأ دائمًا بالسؤال الأصعب. انتقل من فهم
+        مباشر إلى تطبيق ثم تفكير.
+      </p>
+      <div class="card-foot">
+        <span class="tag">PRACTICE</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-number">04 / MASTER</span>
+      <h4>اختبر إتقانك</h4>
+      <p>
+        بعد انتهاء الدرس يظهر اختبار خاص بالدرس نفسه،
+        والأسئلة مرتبطة بالمفهوم الذي تعلمته.
+      </p>
+      <div class="card-foot">
+        <span class="tag">MASTERY</span>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CURRICULUM -->
+
+<section class="view" id="view-curriculum">
+
+  <div class="page-title">
+
+    <div class="eyebrow">JORDAN • GRADE 8 • MATHEMATICS</div>
+
+    <h2>المنهاج الدراسي</h2>
+
+    <p>
+      الصف الثامن الأساسي — الفصل الدراسي الأول والثاني
+    </p>
+
+  </div>
+
+  <div class="semester-switch">
+
+    <button class="active" id="sem1Btn" onclick="setSemester(1)">
+      الفصل الأول
+    </button>
+
+    <button id="sem2Btn" onclick="setSemester(2)">
+      الفصل الثاني
+    </button>
+
+  </div>
+
+  <div id="curriculumContainer"></div>
+
+</section>
+
+
+<!-- LESSON -->
+
+<section class="view" id="view-lesson">
+
+  <div class="lesson-shell">
+
+    <div class="lesson-top">
+
+      <button class="back" onclick="openCurriculum()">
+        ← العودة للمنهاج
+      </button>
+
+      <div class="lesson-progress">
+
+        <div class="lesson-progress-top">
+          <span id="lessonStepText">1 / 5</span>
+          <span>تقدم الدرس</span>
+        </div>
+
+        <div class="lesson-progress-bar">
+          <i id="lessonProgress"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="lesson-cover">
+
+      <div class="eyebrow" id="lessonEyebrow">
+        LESSON
+      </div>
+
+      <h1 id="lessonTitle"></h1>
+
+      <p id="lessonIntro"></p>
+
+      <div class="lesson-meta">
+        <span class="tag" id="lessonUnit"></span>
+        <span class="tag">GRADE 8</span>
+        <span class="tag">NEXA EXPLAIN</span>
+      </div>
+
+    </div>
+
+    <div class="lesson-body" id="lessonSlides"></div>
+
+    <div class="ai-mini">
+
+      <div class="ai-mini-head">
+
+        <div class="ai-dot">NX</div>
+
+        <div>
+          <h4>NEXA AI • مرتبط بهذا الدرس</h4>
+          <span>لا تحتاج إلى مغادرة الصفحة لتسأل.</span>
+        </div>
+
+      </div>
+
+      <p id="lessonAIHint">
+        إذا شعرت أن خطوة غير واضحة، افتح NEXA AI واسأل باسم الفكرة.
+      </p>
+
+      <button class="btn" onclick="openAI()" style="margin-top:12px">
+        افتح NEXA AI
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- QUIZ -->
+
+<section class="view" id="view-quiz">
+
+  <div class="quiz-shell">
+
+    <div class="page-title">
+
+      <div class="eyebrow">MASTERY CHECK</div>
+
+      <h2 id="quizTitle">اختبار الدرس</h2>
+
+      <p id="quizSubtitle">
+        أسئلة متوسطة إلى متقدمة تقيس الفهم، لا الحفظ فقط.
+      </p>
+
+    </div>
+
+    <div class="quiz-card" id="quizCard"></div>
+
+  </div>
+
+</section>
+
+
+<!-- AI -->
+
+<section class="view" id="view-ai">
+
+  <div class="ai-layout">
+
+    <aside class="ai-context">
+
+      <div class="ai-brand">
+
+        <div class="ai-brand-icon">NX</div>
+
+        <div>
+          <h3>NEXA AI</h3>
+          <p>Mathematics Intelligence</p>
+        </div>
+
+      </div>
+
+      <div class="context-block">
+
+        <label>CURRENT CONTEXT</label>
+
+        <div class="context-card">
+
+          <strong id="aiContextLesson">لا يوجد درس محدد</strong>
+
+          <span id="aiContextUnit">
+            اختر درسًا ليصبح NEXA أكثر ارتباطًا بسؤالك.
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="context-block">
+
+        <label>WHAT IT CAN DO</label>
+
+        <div class="context-card">
+
+          <span style="line-height:2.2;display:block">
+            • شرح المفاهيم<br>
+            • حل المسائل<br>
+            • تبسيط الشرح<br>
+            • إعطاء مثال<br>
+            • إعطاء تلميح<br>
+            • اكتشاف الخطأ<br>
+            • عربي + English<br>
+            • محادثة طبيعية
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="context-block">
+
+        <label>TIP</label>
+
+        <div class="context-card">
+          <span style="line-height:2">
+            اكتب السؤال حتى لو كان بأسلوب عامي أو فيه أخطاء.
+            NEXA سيحاول فهم المقصود قبل الإجابة.
+          </span>
+        </div>
+
+      </div>
+
+    </aside>
+
+
+    <div class="ai-main">
+
+      <div class="ai-main-head">
+
+        <div class="ai-title">
+
+          <div class="ai-dot">NX</div>
+
+          <div>
+            <strong>NEXA Intelligence</strong>
+            <span>Local adaptive mathematics engine</span>
+          </div>
+
+        </div>
+
+        <div class="ai-online">
+          ● READY
+        </div>
+
+      </div>
+
+
+      <div class="chat" id="chat">
+
+        <div class="welcome">
+
+          <div class="welcome-logo">NX</div>
+
+          <h2>كيف أقدر أساعدك؟</h2>
+
+          <p>
+            لا تحتاج إلى كتابة السؤال بطريقة معينة.
+            اكتب بالعربي، English، أو اخلط بينهم.
+            اكتب الفكرة التي لم تفهمها وسأحاول تحليلها.
+          </p>
+
+          <div class="quick">
+
+            <button onclick="quickAsk('اشرح لي الجذور التربيعية بطريقة سهلة')">
+              اشرح لي الجذور
+            </button>
+
+            <button onclick="quickAsk('I do not understand equations')">
+              Explain equations
+            </button>
+
+            <button onclick="quickAsk('حل 3x + 7 = 22')">
+              حل معادلة
+            </button>
+
+            <button onclick="quickAsk('ما الفرق بين المتوسط والوسيط؟')">
+              البيانات
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="thinking" id="thinking">
+
+        <div class="thinking-inner">
+
+          <div class="think-dots">
+            <i></i><i></i><i></i>
+          </div>
+
+          NEXA يفكر في السؤال...
+
+        </div>
+
+      </div>
+
+
+      <div class="composer">
+
+        <div class="composer-box">
+
+          <textarea
+            id="aiInput"
+            placeholder="اكتب أي شيء تريد فهمه..."
+            rows="1"
+          ></textarea>
+
+          <button class="send" onclick="sendAI()">↑</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section class="view" id="view-profile">
+
+  <div class="page-title">
+
+    <div class="eyebrow">LEARNING ANALYTICS</div>
+
+    <h2>تقدمك</h2>
+
+    <p>كلما أنهيت درسًا واختبارًا، تتحدث بياناتك تلقائيًا.</p>
+
+  </div>
+
+  <div class="profile-grid">
+
+    <div class="profile-card">
+
+      <h3>إتقان المنهاج</h3>
+
+      <div style="display:flex;justify-content:space-between;margin-bottom:9px">
+        <span style="font-size:11px;color:var(--muted)">التقدم الكلي</span>
+        <strong id="profilePercent">0%</strong>
+      </div>
+
+      <div class="big-progress">
+        <i id="profileProgress"></i>
+      </div>
+
+      <div class="profile-stats">
+
+        <div class="profile-stat">
+          <strong id="profileLessons">0</strong>
+          <span>دروس مكتملة</span>
+        </div>
+
+        <div class="profile-stat">
+          <strong id="profileQuiz">0</strong>
+          <span>اختبارات</span>
+        </div>
+
+        <div class="profile-stat">
+          <strong id="profileBest">0%</strong>
+          <span>أفضل نتيجة</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="profile-card">
+
+      <h3>حالتك الحالية</h3>
+
+      <div class="context-card" style="margin-bottom:10px">
+        <strong id="currentProfileLesson">لم تبدأ درسًا بعد</strong>
+        <span>آخر درس</span>
+      </div>
+
+      <button class="btn primary" style="width:100%" onclick="openCurriculum()">
+        متابعة التعلم
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+</div>
+</main>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* ============================================================
+   NEXA DATA
+============================================================ */
+
+const curriculum = {
+
+  1: [
+
+    {
+      id:"s1u1",
+      title:"الأعداد والجذور",
+      description:"التعامل مع المربعات والجذور وفهم العلاقة بينهما.",
+      lessons:[
+
+        {
+          id:"sqrt",
+          title:"الجذور التربيعية",
+          intro:"في هذا الدرس سنفهم الجذر التربيعي بدل أن نحفظه فقط، ونرى كيف نتحقق من الإجابة ونستخدم الجذور في مسائل مختلفة.",
+          level:"متوسط → متقدم",
+          slides:[
+            {
+              title:"الفكرة الأساسية",
+              html:`
+                <p>
+                  عندما نبحث عن الجذر التربيعي لعدد، فنحن نبحث عن العدد
+                  الذي إذا ضربناه في نفسه حصلنا على العدد الأصلي.
+                </p>
+
+                <div class="math-box">
+                  √49 = 7
+                </div>
+
+                <p>
+                  لأن:
+                </p>
+
+                <div class="math-box">
+                  7 × 7 = 49
+                </div>
+
+                <div class="example">
+                  <strong>فكرة مهمة</strong>
+                  <p>
+                    الرمز √ لا يعني "اقسم" ولا يعني "نصف العدد".
+                    إنه يسأل: ما العدد الذي مربعه يساوي العدد الموجود تحته؟
+                  </p>
+                </div>
+              `
+            },
+
+            {
+              title:"كيف أفكر فيها؟",
+              html:`
+                <p>
+                  بدل أن تحفظ الإجابة، استخدم السؤال العكسي.
+                </p>
+
+                <div class="math-box">
+                  √81 = ؟
+                </div>
+
+                <p>
+                  اسأل نفسك: ما العدد الذي إذا ضربته بنفسه يعطيني 81؟
+                </p>
+
+                <div class="math-box">
+                  9 × 9 = 81
+                </div>
+
+                <p>
+                  إذن:
+                </p>
+
+                <div class="math-box">
+                  √81 = 9
+                </div>
+
+                <div class="example">
+                  <strong>قاعدة ذكية</strong>
+                  <p>
+                    الجذر التربيعي يعكس عملية التربيع.
+                  </p>
+                </div>
+              `
+            },
+
+            {
+              title:"المربعات الكاملة",
+              html:`
+                <p>
+                  العدد الذي يمكن كتابته على صورة عدد صحيح مضروبًا في نفسه
+                  يسمى مربعًا كاملًا.
+                </p>
+
+                <div class="math-box">
+                  1, 4, 9, 16, 25, 36, 49, 64, 81, 100
+                </div>
+
+                <p>
+                  مثلًا:
+                </p>
+
+                <div class="math-box">
+                  8² = 64
+                </div>
+
+                <p>
+                  لذلك:
+                </p>
+
+                <div class="math-box">
+                  √64 = 8
+                </div>
+              `
+            },
+
+            {
+              title:"عندما لا يكون العدد مربعًا كاملًا",
+              html:`
+                <p>
+                  ليس كل عدد له جذر تربيعي صحيح.
+                  مثلًا √20 ليست عددًا صحيحًا.
+                </p>
+
+                <p>
+                  لكن يمكننا تحديد مكانها بين جذرين معروفين:
+                </p>
+
+                <div class="math-box">
+                  16 &lt; 20 &lt; 25
+                </div>
+
+                <div class="math-box">
+                  4 &lt; √20 &lt; 5
+                </div>
+
+                <div class="example">
+                  <strong>فكرة التفكير</strong>
+                  <p>
+                    لا تحتاج دائمًا إلى معرفة القيمة العشرية بالضبط.
+                    أحيانًا يكفي أن تعرف بين أي عددين تقع.
+                  </p>
+                </div>
+              `
+            },
+
+            {
+              title:"تحدي الفهم",
+              html:`
+                <p>
+                  إذا كان طول ضلع مربع يساوي 12 وحدة، فما مساحته؟
+                  وإذا عرفت أن مساحة مربع تساوي 144 وحدة مربعة،
+                  كيف تجد طول ضلعه؟
+                </p>
+
+                <div class="math-box">
+                  المساحة = الضلع²
+                </div>
+
+                <div class="math-box">
+                  √144 = 12
+                </div>
+
+                <p>
+                  هنا نلاحظ أن الجذر التربيعي ليس مجرد موضوع منفصل،
+                  بل يمكن استخدامه لإيجاد طول ضلع مربع من مساحته.
+                </p>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"ما القيمة الصحيحة لـ √144؟",
+              options:["10","11","12","14"],
+              correct:2,
+              explain:"لأن 12 × 12 = 144."
+            },
+            {
+              q:"بين أي عددين صحيحين تقع √50؟",
+              options:["5 و6","6 و7","7 و8","8 و9"],
+              correct:2,
+              explain:"49 < 50 < 64، لذلك 7 < √50 < 8."
+            },
+            {
+              q:"مربع مساحته 196 وحدة مربعة. ما طول ضلعه؟",
+              options:["12","13","14","16"],
+              correct:2,
+              explain:"طول الضلع = √196 = 14."
+            },
+            {
+              q:"أي عدد مما يلي مربع كامل؟",
+              options:["45","54","72","81"],
+              correct:3,
+              explain:"81 = 9 × 9."
+            },
+            {
+              q:"إذا كان x² = 169 وكان x عددًا موجبًا، فما قيمة x؟",
+              options:["11","12","13","14"],
+              correct:2,
+              explain:"√169 = 13، ومع كون x موجبًا فإن x = 13."
+            }
+          ]
+        },
+
+        {
+          id:"squares",
+          title:"المربعات الكاملة",
+          intro:"نتعلم كيف نميز المربعات الكاملة ونستخدمها بسرعة في الحساب والتحليل.",
+          level:"متوسط",
+          slides:[
+            {
+              title:"ما هو المربع الكامل؟",
+              html:`
+                <p>
+                  المربع الكامل هو عدد ينتج من ضرب عدد صحيح في نفسه.
+                </p>
+                <div class="math-box">5 × 5 = 25</div>
+                <p>إذن 25 مربع كامل.</p>
+              `
+            },
+            {
+              title:"سلسلة المربعات",
+              html:`
+                <div class="math-box">
+                  1² = 1<br>
+                  2² = 4<br>
+                  3² = 9<br>
+                  4² = 16<br>
+                  5² = 25
+                </div>
+                <p>
+                  حفظ أول مجموعة من المربعات يساعدك كثيرًا في حل الجذور بسرعة.
+                </p>
+              `
+            },
+            {
+              title:"اكتشاف سريع",
+              html:`
+                <p>
+                  عندما ترى عددًا كبيرًا، حاول التفكير:
+                  هل يمكن أن يكون ناتج مربع عدد صحيح؟
+                </p>
+                <div class="math-box">121 = 11²</div>
+                <div class="math-box">225 = 15²</div>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"أي عدد يمثل مربعًا كاملًا؟",
+              options:["63","72","100","110"],
+              correct:2,
+              explain:"100 = 10²."
+            },
+            {
+              q:"ما قيمة 17²؟",
+              options:["279","289","297","307"],
+              correct:1,
+              explain:"17 × 17 = 289."
+            },
+            {
+              q:"ما الجذر التربيعي لـ225؟",
+              options:["13","14","15","16"],
+              correct:2,
+              explain:"15 × 15 = 225."
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      id:"s1u2",
+      title:"التعبيرات والمعادلات",
+      description:"التعبيرات الجبرية والمعادلات والتفكير الرمزي.",
+      lessons:[
+
+        {
+          id:"expressions",
+          title:"التعبيرات الجبرية",
+          intro:"سنحول بين اللغة العادية واللغة الجبرية ونفهم معنى المتغير والمعامل والثابت.",
+          level:"متوسط",
+          slides:[
+            {
+              title:"ما هو التعبير الجبري؟",
+              html:`
+                <p>
+                  التعبير الجبري هو عبارة رياضية تحتوي أعدادًا ومتغيرات
+                  وعمليات حسابية.
+                </p>
+                <div class="math-box">3x + 5</div>
+                <p>
+                  هنا x متغير، و3 معامل، و5 ثابت.
+                </p>
+              `
+            },
+            {
+              title:"من الكلمات إلى الرياضيات",
+              html:`
+                <p>خمسة أكثر من عدد x يمكن تمثيلها بـ:</p>
+                <div class="math-box">x + 5</div>
+                <p>ضعف عدد x:</p>
+                <div class="math-box">2x</div>
+              `
+            },
+            {
+              title:"تبسيط التعبير",
+              html:`
+                <p>
+                  الحدود المتشابهة يمكن جمعها.
+                </p>
+                <div class="math-box">3x + 2x = 5x</div>
+                <p>
+                  لأن كلا الحدين يحتويان المتغير نفسه x.
+                </p>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"أي تعبير يمثل ثلاثة أمثال العدد x زائد 7؟",
+              options:["3 + 7x","3x + 7","x + 21","3(x+7)"],
+              correct:1,
+              explain:"ثلاثة أمثال x = 3x، ثم زائد 7."
+            },
+            {
+              q:"بسّط: 4x + 3x + 2",
+              options:["7x","7x + 2","12x","9x + 2"],
+              correct:1,
+              explain:"4x + 3x = 7x."
+            }
+          ]
+        },
+
+        {
+          id:"equations",
+          title:"حل المعادلات",
+          intro:"المعادلة ليست لغزًا. هي توازن، وهدفنا إيجاد قيمة المتغير التي تجعل الطرفين متساويين.",
+          level:"متوسط → متقدم",
+          slides:[
+            {
+              title:"المعادلة كتوازن",
+              html:`
+                <p>
+                  عندما يكون لدينا:
+                </p>
+                <div class="math-box">x + 5 = 12</div>
+                <p>
+                  نريد عزل x. نطرح 5 من الطرفين.
+                </p>
+                <div class="math-box">x = 7</div>
+              `
+            },
+            {
+              title:"المعامل",
+              html:`
+                <p>
+                  إذا كان:
+                </p>
+                <div class="math-box">3x = 21</div>
+                <p>
+                  نقسم الطرفين على 3:
+                </p>
+                <div class="math-box">x = 7</div>
+              `
+            },
+            {
+              title:"معادلات من خطوتين",
+              html:`
+                <div class="math-box">2x + 7 = 19</div>
+                <p>نطرح 7:</p>
+                <div class="math-box">2x = 12</div>
+                <p>ثم نقسم على 2:</p>
+                <div class="math-box">x = 6</div>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"حل المعادلة: 3x + 5 = 20",
+              options:["4","5","6","7"],
+              correct:1,
+              explain:"3x = 15، إذن x = 5."
+            },
+            {
+              q:"إذا كان 5x − 8 = 27، فما x؟",
+              options:["5","6","7","8"],
+              correct:2,
+              explain:"5x = 35 ثم x = 7."
+            },
+            {
+              q:"حل: 4x + 3 = 2x + 15",
+              options:["4","5","6","7"],
+              correct:2,
+              explain:"2x = 12، إذن x = 6."
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      id:"s1u3",
+      title:"النسب والتناسب",
+      description:"فهم النسبة والتناسب وتطبيقهما في مسائل الحياة اليومية.",
+      lessons:[
+
+        {
+          id:"ratios",
+          title:"النسب",
+          intro:"النسبة طريقة لمقارنة كميتين باستخدام علاقة واضحة بينهما.",
+          level:"متوسط",
+          slides:[
+            {
+              title:"ما معنى النسبة؟",
+              html:`
+                <p>
+                  إذا كان لدينا 6 أقلام و3 دفاتر، فإن نسبة الأقلام إلى الدفاتر:
+                </p>
+                <div class="math-box">6 : 3 = 2 : 1</div>
+              `
+            },
+            {
+              title:"تبسيط النسبة",
+              html:`
+                <p>
+                  نقسم طرفي النسبة على العدد نفسه.
+                </p>
+                <div class="math-box">12 : 8 = 3 : 2</div>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"بسّط النسبة 18 : 12",
+              options:["2:1","3:2","4:3","5:2"],
+              correct:1,
+              explain:"نقسم الطرفين على 6 فنحصل على 3:2."
+            },
+            {
+              q:"إذا كان عدد الطلاب 24 وعدد الطالبات 16، فما النسبة المبسطة للطلاب إلى الطالبات؟",
+              options:["2:1","3:2","4:3","5:4"],
+              correct:1,
+              explain:"24:16 تقسم على 8 = 3:2."
+            }
+          ]
+        },
+
+        {
+          id:"proportion",
+          title:"التناسب",
+          intro:"التناسب يربط نسبتين متساويتين، ويمكن استخدامه لإيجاد قيمة مجهولة.",
+          level:"متوسط → متقدم",
+          slides:[
+            {
+              title:"ما هو التناسب؟",
+              html:`
+                <div class="math-box">2 / 3 = 8 / 12</div>
+                <p>
+                  النسبتان متساويتان لأنهما تمثلان العلاقة نفسها.
+                </p>
+              `
+            },
+            {
+              title:"إيجاد المجهول",
+              html:`
+                <div class="math-box">3 / 5 = x / 20</div>
+                <p>
+                  باستخدام الضرب التبادلي:
+                </p>
+                <div class="math-box">3 × 20 = 5x</div>
+                <div class="math-box">x = 12</div>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"إذا كان 4/7 = x/21، فما x؟",
+              options:["8","10","12","14"],
+              correct:2,
+              explain:"4 × 21 = 7x، إذن 84 = 7x وx = 12."
+            },
+            {
+              q:"إذا كانت 5 دفاتر تكلف 10 دنانير، فما تكلفة 8 دفاتر بالسعر نفسه؟",
+              options:["12","14","16","18"],
+              correct:2,
+              explain:"سعر الدفتر 2 دينار، إذن 8 دفاتر = 16 دينارًا."
+            }
+          ]
+        }
+
+      ]
+    }
+
+  ],
+
+
+  2: [
+
+    {
+      id:"s2u1",
+      title:"الهندسة والقياس",
+      description:"العلاقات الهندسية والمساحات وتطبيق التفكير الهندسي.",
+      lessons:[
+
+        {
+          id:"angles",
+          title:"الزوايا والعلاقات بينها",
+          intro:"سنفهم كيف ترتبط الزوايا ببعضها وكيف نستخدم مجموع الزوايا لإيجاد المجهول.",
+          level:"متوسط → متقدم",
+          slides:[
+            {
+              title:"الزوايا الأساسية",
+              html:`
+                <p>
+                  الزاوية تتكون من شعاعين لهما نقطة بداية مشتركة.
+                  قياس الزاوية يحدد مقدار الفتح بينهما.
+                </p>
+                <div class="math-box">الزاوية القائمة = 90°</div>
+                <div class="math-box">الزاوية المستقيمة = 180°</div>
+              `
+            },
+            {
+              title:"زوايا متجاورة",
+              html:`
+                <p>
+                  إذا كانت زاويتان متجاورتان تكملان خطًا مستقيمًا،
+                  فإن مجموعهما 180°.
+                </p>
+                <div class="math-box">x + 70° = 180°</div>
+                <div class="math-box">x = 110°</div>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"زاويتان على خط مستقيم، إحداهما 68°. ما قياس الأخرى؟",
+              options:["102°","112°","118°","122°"],
+              correct:1,
+              explain:"180 − 68 = 112."
+            },
+            {
+              q:"إذا كانت زاوية قائمة مقسمة إلى زاويتين، إحداهما 37°، فما الأخرى؟",
+              options:["43°","53°","63°","73°"],
+              correct:1,
+              explain:"90 − 37 = 53."
+            }
+          ]
+        },
+
+        {
+          id:"area",
+          title:"المساحة",
+          intro:"سنستخدم الأبعاد لإيجاد مساحة الأشكال، ثم نحل مسائل تحتاج أكثر من خطوة.",
+          level:"متوسط",
+          slides:[
+            {
+              title:"مساحة المستطيل",
+              html:`
+                <div class="math-box">المساحة = الطول × العرض</div>
+                <div class="math-box">8 × 5 = 40</div>
+              `
+            },
+            {
+              title:"مسائل متعددة الخطوات",
+              html:`
+                <p>
+                  إذا كان لدينا مستطيل أبعاده 12 و7:
+                </p>
+                <div class="math-box">12 × 7 = 84</div>
+                <p>
+                  إذن مساحته 84 وحدة مربعة.
+                </p>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"مستطيل طوله 15 وعرضه 8. ما مساحته؟",
+              options:["100","110","120","130"],
+              correct:2,
+              explain:"15 × 8 = 120."
+            },
+            {
+              q:"مساحة مستطيل 96 وعرضه 8. ما طوله؟",
+              options:["10","11","12","14"],
+              correct:2,
+              explain:"الطول = 96 ÷ 8 = 12."
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      id:"s2u2",
+      title:"البيانات والاحتمال",
+      description:"قراءة البيانات وفهم المقاييس الأساسية والاحتمال.",
+      lessons:[
+
+        {
+          id:"data",
+          title:"تحليل البيانات",
+          intro:"كيف نقرأ مجموعة بيانات؟ وكيف نعرف المتوسط والوسيط والمنوال والمدى؟",
+          level:"متوسط",
+          slides:[
+            {
+              title:"المتوسط الحسابي",
+              html:`
+                <p>
+                  المتوسط = مجموع القيم ÷ عدد القيم.
+                </p>
+                <div class="math-box">(4 + 6 + 8) ÷ 3 = 6</div>
+              `
+            },
+            {
+              title:"الوسيط والمنوال",
+              html:`
+                <p>
+                  الوسيط هو القيمة الموجودة في المنتصف بعد ترتيب البيانات.
+                </p>
+                <p>
+                  المنوال هو القيمة الأكثر تكرارًا.
+                </p>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"ما متوسط القيم 5، 7، 9؟",
+              options:["6","7","8","9"],
+              correct:1,
+              explain:"21 ÷ 3 = 7."
+            },
+            {
+              q:"ما المنوال في: 2، 4، 4، 5، 7؟",
+              options:["2","4","5","7"],
+              correct:1,
+              explain:"العدد 4 هو الأكثر تكرارًا."
+            }
+          ]
+        },
+
+        {
+          id:"probability",
+          title:"الاحتمال",
+          intro:"سنقيس مدى إمكانية حدوث حدث معين باستخدام النسبة بين الحالات المطلوبة والحالات الكلية.",
+          level:"متوسط → متقدم",
+          slides:[
+            {
+              title:"الفكرة",
+              html:`
+                <p>
+                  في حالة تساوي فرص النتائج:
+                </p>
+                <div class="math-box">
+                  احتمال الحدث = الحالات المطلوبة ÷ الحالات الكلية
+                </div>
+              `
+            },
+            {
+              title:"مثال",
+              html:`
+                <p>
+                  صندوق يحتوي 3 كرات حمراء و7 زرقاء.
+                  ما احتمال سحب كرة حمراء؟
+                </p>
+                <div class="math-box">3 / 10</div>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"كيس يحتوي 4 كرات حمراء و6 زرقاء. ما احتمال سحب كرة حمراء؟",
+              options:["1/5","2/5","3/5","4/5"],
+              correct:1,
+              explain:"4 من أصل 10 = 4/10 = 2/5."
+            },
+            {
+              q:"إذا كان احتمال حدث 1/4، فما النسبة المئوية المكافئة؟",
+              options:["15%","20%","25%","40%"],
+              correct:2,
+              explain:"1 ÷ 4 = 0.25 = 25%."
+            }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      id:"s2u3",
+      title:"التفكير الرياضي",
+      description:"استراتيجيات حل المشكلات وتحليل المعلومات للوصول للحل.",
+      lessons:[
+
+        {
+          id:"problem",
+          title:"حل المسألة بذكاء",
+          intro:"المسألة الصعبة لا تحتاج دائمًا إلى قانون جديد. أحيانًا تحتاج إلى تفكيك السؤال.",
+          level:"متقدم",
+          slides:[
+            {
+              title:"افهم قبل أن تحسب",
+              html:`
+                <p>
+                  قبل كتابة أي عملية، حدد:
+                </p>
+                <div class="example">
+                  <strong>1</strong>
+                  <p>ما المعلومات المعطاة؟</p>
+                </div>
+                <div class="example">
+                  <strong>2</strong>
+                  <p>ما الشيء المطلوب؟</p>
+                </div>
+                <div class="example">
+                  <strong>3</strong>
+                  <p>ما العلاقة الرياضية بينهما؟</p>
+                </div>
+              `
+            },
+            {
+              title:"لا تبدأ من أول رقم",
+              html:`
+                <p>
+                  في المسائل متعددة الخطوات، اكتب خطة صغيرة.
+                  أحيانًا يكون الحل النهائي بسيطًا لكن الطريق يحتاج ترتيبًا.
+                </p>
+                <div class="math-box">
+                  معلومات → خطة → حساب → تحقق
+                </div>
+              `
+            },
+            {
+              title:"التحقق",
+              html:`
+                <p>
+                  بعد الوصول للإجابة، اسأل:
+                  هل الإجابة منطقية؟
+                </p>
+                <p>
+                  إذا وجدت طولًا سالبًا أو احتمالًا أكبر من 1،
+                  فهناك خطأ في الحل.
+                </p>
+              `
+            }
+          ],
+          quiz:[
+            {
+              q:"ما الخطوة الأفضل قبل البدء بالحساب في مسألة طويلة؟",
+              options:[
+                "جمع كل الأرقام مباشرة",
+                "تحديد المطلوب والمعطيات",
+                "اختيار أكبر رقم",
+                "تخمين الإجابة"
+              ],
+              correct:1,
+              explain:"فهم المطلوب والمعطيات يجعل اختيار العملية أسهل."
+            },
+            {
+              q:"إذا حصلت على احتمال 1.4، ما الاستنتاج الصحيح؟",
+              options:[
+                "الإجابة ممتازة",
+                "يجب ضربها في 2",
+                "هناك خطأ لأن الاحتمال لا يتجاوز 1",
+                "نحوّلها إلى 14%"
+              ],
+              correct:2,
+              explain:"الاحتمال يقع بين 0 و1 في هذا التمثيل."
+            }
+          ]
+        }
+
+      ]
+    }
+
+  ]
+
+};
+
+
+/* ============================================================
+   STATE
+============================================================ */
+
+const state = {
+
+  semester:1,
+
+  currentLesson:null,
+
+  currentSlide:0,
+
+  currentQuiz:[],
+
+  quizIndex:0,
+
+  quizScore:0,
+
+  quizAnswered:false,
+
+  testsTaken:Number(localStorage.getItem("NEXA_TESTS")||0),
+
+  best:Number(localStorage.getItem("NEXA_BEST")||0),
+
+  done:JSON.parse(localStorage.getItem("NEXA_DONE")||"[]"),
+
+  memory:JSON.parse(localStorage.getItem("NEXA_MEMORY")||"[]")
+
+};
+
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
+function allLessons(){
+
+  return [
+    ...curriculum[1].flatMap(u=>u.lessons),
+    ...curriculum[2].flatMap(u=>u.lessons)
+  ];
+
+}
+
+function findLesson(id){
+
+  return allLessons().find(l=>l.id===id);
+
+}
+
+function lessonUnit(id){
+
+  for(const sem of [1,2]){
+
+    for(const unit of curriculum[sem]){
+
+      if(unit.lessons.some(l=>l.id===id)){
+        return unit;
+      }
+
+    }
+
+  }
+
+}
+
+function showView(name){
+
+  document.querySelectorAll(".view").forEach(v=>{
+    v.classList.remove("active");
+  });
+
+  const view=document.getElementById("view-"+name);
+
+  if(view)view.classList.add("active");
+
+  document.querySelectorAll(".nav button").forEach(b=>{
+    b.classList.toggle("active",b.dataset.view===name);
+  });
+
+  const names={
+    home:"الرئيسية",
+    curriculum:"المنهاج",
+    lesson:"الدرس",
+    quiz:"الاختبار",
+    ai:"NEXA AI",
+    profile:"تقدمي"
+  };
+
+  document.getElementById("breadcrumb").innerHTML=
+    `NEXA <span>›</span> <b>${names[name]||name}</b>`;
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toast(text){
+
+  const el=document.getElementById("toast");
+
+  el.textContent=text;
+  el.classList.add("show");
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer=setTimeout(()=>{
+    el.classList.remove("show");
+  },2500);
+
+}
+
+function toggleSidebar(){
+
+  document.getElementById("sidebar").classList.toggle("open");
+
+}
+
+function openCurriculum(){
+
+  showView("curriculum");
+  renderCurriculum();
+
+}
+
+function openAI(){
+
+  showView("ai");
+
+  setTimeout(()=>{
+    document.getElementById("aiInput").focus();
+  },100);
+
+}
+
+function saveState(){
+
+  localStorage.setItem("NEXA_DONE",JSON.stringify(state.done));
+  localStorage.setItem("NEXA_TESTS",state.testsTaken);
+  localStorage.setItem("NEXA_BEST",state.best);
+  localStorage.setItem("NEXA_MEMORY",JSON.stringify(state.memory.slice(-30)));
+
+}
+
+
+/* ============================================================
+   CURRICULUM
+============================================================ */
+
+function setSemester(sem){
+
+  state.semester=sem;
+
+  document.getElementById("sem1Btn").classList.toggle("active",sem===1);
+  document.getElementById("sem2Btn").classList.toggle("active",sem===2);
+
+  renderCurriculum();
+
+}
+
+function renderCurriculum(){
+
+  const container=document.getElementById("curriculumContainer");
+
+  container.innerHTML="";
+
+  curriculum[state.semester].forEach((unit,index)=>{
+
+    const unitEl=document.createElement("div");
+
+    unitEl.className="unit";
+
+    unitEl.innerHTML=`
+
+      <div class="unit-head" onclick="this.parentElement.classList.toggle('open')">
+
+        <div class="unit-title">
+
+          <div class="unit-index">
+            ${String(index+1).padStart(2,"0")}
+          </div>
+
+          <div>
+            <h3>${unit.title}</h3>
+            <small>${unit.description}</small>
+          </div>
+
+        </div>
+
+        <div class="unit-arrow">⌄</div>
+
+      </div>
+
+      <div class="lessons">
+
+        ${unit.lessons.map((lesson,i)=>`
+
+          <div
+            class="lesson ${state.done.includes(lesson.id)?"done":""}"
+            onclick="openLesson('${lesson.id}')"
+          >
+
+            <div class="lesson-info">
+
+              <div class="lesson-icon">
+                ${String(i+1).padStart(2,"0")}
+              </div>
+
+              <div>
+                <h4>${lesson.title}</h4>
+                <p>${lesson.level}</p>
+              </div>
+
+            </div>
+
+            <div class="lesson-status">
+              ${state.done.includes(lesson.id)?"✓ مكتمل":"ابدأ →"}
+            </div>
+
+          </div>
+
+        `).join("")}
+
+      </div>
+
+    `;
+
+    container.appendChild(unitEl);
+
+  });
+
+}
+
+
+/* ============================================================
+   LESSON ENGINE
+============================================================ */
+
+function openLesson(id){
+
+  const lesson=findLesson(id);
+
+  if(!lesson)return;
+
+  state.currentLesson=lesson;
+  state.currentSlide=0;
+
+  const unit=lessonUnit(id);
+
+  document.getElementById("lessonTitle").textContent=lesson.title;
+  document.getElementById("lessonIntro").textContent=lesson.intro;
+  document.getElementById("lessonUnit").textContent=unit.title;
+
+  document.getElementById("lessonEyebrow").textContent=
+    `LESSON ${lesson.id.toUpperCase()}`;
+
+  document.getElementById("aiContextLesson").textContent=
+    lesson.title;
+
+  document.getElementById("aiContextUnit").textContent=
+    unit.title;
+
+  renderSlides();
+
+  showView("lesson");
+
+}
+
+function renderSlides(){
+
+  const lesson=state.currentLesson;
+
+  const container=document.getElementById("lessonSlides");
+
+  container.innerHTML="";
+
+  lesson.slides.forEach((slide,i)=>{
+
+    const el=document.createElement("div");
+
+    el.className="slide"+(i===0?" active":"");
+
+    el.innerHTML=`
+
+      <h2>${slide.title}</h2>
+
+      ${slide.html}
+
+      <div class="lesson-nav">
+
+        <button
+          class="btn"
+          onclick="previousSlide()"
+          ${i===0?"disabled style='opacity:.35'":""}
+        >
+          ← السابق
+        </button>
+
+        ${
+          i<lesson.slides.length-1
+          ?
+          `<button class="btn primary" onclick="nextSlide()">التالي →</button>`
+          :
+          `<button class="btn primary" onclick="startLessonQuiz()">إنهاء الدرس →</button>`
+        }
+
+      </div>
+
+    `;
+
+    container.appendChild(el);
+
+  });
+
+  updateSlide();
+
+}
+
+function updateSlide(){
+
+  const lesson=state.currentLesson;
+
+  if(!lesson)return;
+
+  document.querySelectorAll("#lessonSlides .slide").forEach((s,i)=>{
+    s.classList.toggle("active",i===state.currentSlide);
+  });
+
+  const total=lesson.slides.length;
+
+  document.getElementById("lessonStepText").textContent=
+    `${state.currentSlide+1} / ${total}`;
+
+  document.getElementById("lessonProgress").style.width=
+    `${((state.currentSlide+1)/total)*100}%`;
+
+}
+
+function nextSlide(){
+
+  if(state.currentSlide < state.currentLesson.slides.length-1){
+
+    state.currentSlide++;
+
+    updateSlide();
+
+  }
+
+}
+
+function previousSlide(){
+
+  if(state.currentSlide>0){
+
+    state.currentSlide--;
+
+    updateSlide();
+
+  }
+
+}
+
+function startLessonQuiz(){
+
+  const lesson=state.currentLesson;
+
+  if(!lesson)return;
+
+  state.currentQuiz=lesson.quiz;
+
+  state.quizIndex=0;
+  state.quizScore=0;
+  state.quizAnswered=false;
+
+  document.getElementById("quizTitle").textContent=
+    `اختبار: ${lesson.title}`;
+
+  document.getElementById("quizSubtitle").textContent=
+    "اختبار متوسط إلى متقدم — الأسئلة مرتبطة مباشرة بالدرس.";
+
+  showView("quiz");
+
+  renderQuiz();
+
+}
+
+
+/* ============================================================
+   QUIZ ENGINE
+============================================================ */
+
+function renderQuiz(){
+
+  const card=document.getElementById("quizCard");
+
+  if(state.quizIndex>=state.currentQuiz.length){
+
+    finishQuiz();
+
+    return;
+
+  }
+
+  const q=state.currentQuiz[state.quizIndex];
+
+  state.quizAnswered=false;
+
+  card.innerHTML=`
+
+    <div class="quiz-head">
+
+      <div class="quiz-count">
+        سؤال ${state.quizIndex+1} من ${state.currentQuiz.length}
+      </div>
+
+      <div class="difficulty">
+        ${state.quizIndex>=2?"CHALLENGE":"CORE"}
+      </div>
+
+    </div>
+
+    <div class="question">
+
+      <h2>${q.q}</h2>
+
+      <div class="answers">
+
+        ${q.options.map((option,i)=>`
+
+          <button
+            class="answer"
+            onclick="answerQuiz(${i})"
+            id="answer-${i}"
+          >
+            <span style="color:#596579;margin-left:8px">
+              ${String.fromCharCode(65+i)}
+            </span>
+            ${option}
+          </button>
+
+        `).join("")}
+
+      </div>
+
+      <div class="quiz-explanation" id="quizExplanation">
+        ${q.explain}
+      </div>
+
+    </div>
+
+    <div class="quiz-bottom">
+
+      <span style="font-size:10px;color:var(--muted)">
+        اختر إجابة واحدة
+      </span>
+
+      <button
+        class="btn primary"
+        id="nextQuizBtn"
+        onclick="nextQuizQuestion()"
+        style="opacity:.45;pointer-events:none"
+      >
+        ${state.quizIndex===state.currentQuiz.length-1?"النتيجة":"السؤال التالي"} →
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+function answerQuiz(index){
+
+  if(state.quizAnswered)return;
+
+  state.quizAnswered=true;
+
+  const q=state.currentQuiz[state.quizIndex];
+
+  document.querySelectorAll(".answer").forEach((b,i)=>{
+
+    if(i===q.correct){
+      b.classList.add("correct");
+    }
+
+    if(i===index && index!==q.correct){
+      b.classList.add("wrong");
+    }
+
+  });
+
+  if(index===q.correct){
+
+    state.quizScore++;
+
+  }
+
+  document.getElementById("quizExplanation")
+    .classList.add("show");
+
+  const next=document.getElementById("nextQuizBtn");
+
+  next.style.opacity="1";
+  next.style.pointerEvents="auto";
+
+}
+
+function nextQuizQuestion(){
+
+  if(!state.quizAnswered)return;
+
+  state.quizIndex++;
+
+  renderQuiz();
+
+}
+
+function finishQuiz(){
+
+  const total=state.currentQuiz.length;
+
+  const percent=Math.round((state.quizScore/total)*100);
+
+  state.testsTaken++;
+
+  if(percent>state.best){
+    state.best=percent;
+  }
+
+  if(percent>=70 && state.currentLesson){
+
+    if(!state.done.includes(state.currentLesson.id)){
+      state.done.push(state.currentLesson.id);
+    }
+
+  }
+
+  saveState();
+  updateStats();
+
+  const card=document.getElementById("quizCard");
+
+  let message="";
+
+  if(percent>=90){
+    message="ممتاز جدًا. واضح أنك فهمت الفكرة وليس فقط الإجابة.";
+  }else if(percent>=70){
+    message="نتيجة قوية. راجع النقاط التي أخطأت فيها ثم جرّب مرة أخرى.";
+  }else{
+    message="لا مشكلة. ارجع للدرس واسأل NEXA عن النقطة التي أربكتك.";
+  }
+
+  card.innerHTML=`
+
+    <div class="score-screen">
+
+      <div class="score-ring">
+        <strong>${percent}%</strong>
+      </div>
+
+      <h2>${state.quizScore} / ${total}</h2>
+
+      <p style="color:var(--muted);font-size:12px;margin-top:10px;line-height:2">
+        ${message}
+      </p>
+
+      <div style="display:flex;justify-content:center;gap:9px;margin-top:25px;flex-wrap:wrap">
+
+        <button class="btn" onclick="openLesson('${state.currentLesson.id}')">
+          مراجعة الدرس
+        </button>
+
+        <button class="btn" onclick="openAI()">
+          اسأل NEXA
+        </button>
+
+        <button class="btn primary" onclick="openCurriculum()">
+          العودة للمنهاج
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   STATS
+============================================================ */
+
+function updateStats(){
+
+  const total=allLessons().length;
+
+  const done=state.done.length;
+
+  const percent=Math.round((done/total)*100);
+
+  document.getElementById("statLessons").textContent=total;
+  document.getElementById("statDone").textContent=done;
+  document.getElementById("statTests").textContent=state.testsTaken;
+  document.getElementById("statMastery").textContent=percent+"%";
+
+  document.getElementById("sidePercent").textContent=percent+"%";
+  document.getElementById("sideProgress").style.width=percent+"%";
+
+  document.getElementById("profilePercent").textContent=percent+"%";
+  document.getElementById("profileProgress").style.width=percent+"%";
+  document.getElementById("profileLessons").textContent=done;
+  document.getElementById("profileQuiz").textContent=state.testsTaken;
+  document.getElementById("profileBest").textContent=state.best+"%";
+
+  if(state.currentLesson){
+    document.getElementById("currentProfileLesson").textContent=
+      state.currentLesson.title;
+  }
+
+}
+
+
+/* ============================================================
+   NEXA AI — LANGUAGE ENGINE
+============================================================ */
+
+function normalizeArabic(text){
+
+  return text
+    .toLowerCase()
+    .replace(/[ًٌٍَُِّْـ]/g,"")
+    .replace(/[إأآا]/g,"ا")
+    .replace(/ى/g,"ي")
+    .replace(/ة/g,"ه")
+    .replace(/ؤ/g,"و")
+    .replace(/ئ/g,"ي")
+    .replace(/[؟?!.,،:;()[\]{}"'`]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+
+}
+
+function normalizeEnglish(text){
+
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9+\-*/=().\s]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+
+}
+
+function isEnglish(text){
+
+  const letters=(text.match(/[a-zA-Z]/g)||[]).length;
+  const arabic=(text.match(/[\u0600-\u06ff]/g)||[]).length;
+
+  return letters>arabic;
+
+}
+
+function containsAny(text,words){
+
+  return words.some(w=>text.includes(w));
+
+}
+
+function numberList(text){
+
+  const matches=text.match(/-?\d+(?:\.\d+)?/g)||[];
+
+  return matches.map(Number);
+
+}
+
+function sameLanguage(text){
+
+  return isEnglish(text) ? "en" : "ar";
+
+}
+
+
+/* ============================================================
+   MATH PARSER
+============================================================ */
+
+function solveArithmetic(text){
+
+  let s=text
+    .replace(/×/g,"*")
+    .replace(/÷/g,"/")
+    .replace(/x/g,"*")
+    .replace(/[^0-9+\-*/().\s]/g,"");
+
+  if(!/[+\-*/]/.test(s))return null;
+
+  try{
+
+    if(s.length>80)return null;
+
+    const result=Function('"use strict";return ('+s+')')();
+
+    if(Number.isFinite(result))return result;
+
+  }catch(e){}
+
+  return null;
+
+}
+
+function solveLinear(text){
+
+  let s=text
+    .toLowerCase()
+    .replace(/×/g,"*")
+    .replace(/\s/g,"");
+
+  if(!/[x]/.test(s))return null;
+
+  const match=s.match(
+    /^([+-]?\d*\.?\d*)x([+-]\d+\.?\d*)?=([+-]?\d+\.?\d*)$/
+  );
+
+  if(!match)return null;
+
+  let a=match[1];
+
+  if(a===""||a==="+")a=1;
+  else if(a==="-")a=-1;
+  else a=Number(a);
+
+  const b=match[2]?Number(match[2]):0;
+  const c=Number(match[3]);
+
+  const x=(c-b)/a;
+
+  return {
+    a,b,c,x
+  };
+
+}
+
+function sqrtEngine(text){
+
+  const match=text.match(/(?:√|sqrt\s*\(?)(\d+(?:\.\d+)?)/i);
+
+  if(!match)return null;
+
+  const n=Number(match[1]);
+
+  if(n<0)return null;
+
+  const r=Math.sqrt(n);
+
+  return {
+    n,
+    r,
+    exact:Number.isInteger(r)
+  };
+
+}
+
+
+/* ============================================================
+   INTENT DETECTION
+============================================================ */
+
+const intents={
+
+  greeting:[
+    "مرحبا","اهلا","هلا","السلام عليكم","السلام","صباح الخير",
+    "مساء الخير","هاي","hello","hi","hey","good morning","good evening"
+  ],
+
+  thanks:[
+    "شكرا","مشكور","يسلمو","يعطيك العافيه","thanks","thank you","thx"
+  ],
+
+  goodbye:[
+    "باي","مع السلامه","الى اللقاء","goodbye","bye","see you"
+  ],
+
+  explain:[
+    "اشرح","شرح","وضح","توضيح","مش فاهم","مفهمتش","ما فهمت",
+    "افهمني","فسر","فسرلي","كيف افهم","ساعدني افهم",
+    "explain","explain this","i dont understand","i do not understand",
+    "help me understand","what does this mean"
+  ],
+
+  easy:[
+    "سهل","ابسط","ببساطه","بطريقه بسيطه","طفل","easy","simpler",
+    "simple","easier","basic"
+  ],
+
+  hard:[
+    "صعب","اصعب","متقدم","تحدي","hard","harder","advanced","challenge"
+  ],
+
+  example:[
+    "مثال","اعطيني مثال","مثال اخر","example","give me an example",
+    "another example"
+  ],
+
+  hint:[
+    "تلميح","ساعدني بدون حل","اعطيني اشاره","hint","give me a hint"
+  ],
+
+  solve:[
+    "حل","احسب","اوجد","ما الناتج","كم يساوي","جد قيمة",
+    "solve","calculate","find x","what is the answer"
+  ],
+
+  root:[
+    "جذر","جذور","جذر تربيعي","الجذر التربيعي","sqrt","square root",
+    "radical","radicals"
+  ],
+
+  square:[
+    "مربع كامل","مربعات كامله","تربيع","square","squared",
+    "perfect square"
+  ],
+
+  equation:[
+    "معادله","معادلات","x=","المجهول","متغير",
+    "equation","equations","variable","unknown"
+  ],
+
+  fraction:[
+    "كسر","كسور","بسط","مقام","fraction","fractions",
+    "numerator","denominator"
+  ],
+
+  ratio:[
+    "نسبه","نسب","تناسب","proportion","ratio","ratios"
+  ],
+
+  geometry:[
+    "هندسه","زاويه","زوايا","مساحه","محيط","مثلث","مستطيل",
+    "دائره","geometry","angle","angles","area","perimeter",
+    "triangle","rectangle","circle"
+  ],
+
+  data:[
+    "بيانات","متوسط","وسيط","منوال","مدى","احصاء",
+    "data","mean","median","mode","range","statistics"
+  ],
+
+  probability:[
+    "احتمال","احتمالات","فرصه","فرص","probability","chance",
+    "likely","unlikely"
+  ],
+
+  lesson:[
+    "الدرس","هذا الدرس","الدرس الحالي","lesson","current lesson"
+  ],
+
+  test:[
+    "اختبار","امتحان","اسئله","سؤال","quiz","test","exam","question"
+  ],
+
+  identity:[
+    "مين انت","من انت","شو انت","who are you","what are you",
+    "what can you do"
+  ],
+
+  capability:[
+    "شو بتعرف","ماذا تعرف","بتفهم","هل تفهم","can you",
+    "what can you do","do you understand"
+  ],
+
+  chat:[
+    "بدي احكي معك","بدي اتكلم معك","خلينا نحكي",
+    "i want to talk","can we talk","talk to me"
+  ],
+
+  positive:[
+    "ممتاز","رائع","حلو","جميل","اسطوري","جبار","love",
+    "nice","great","awesome","amazing","cool"
+  ]
+
+};
+
+
+/* ============================================================
+   TOPIC DETECTOR
+============================================================ */
+
+function detectTopic(text){
+
+  const n=normalizeArabic(text);
+
+  if(containsAny(n,intents.root))return"root";
+  if(containsAny(n,intents.square))return"square";
+  if(containsAny(n,intents.equation))return"equation";
+  if(containsAny(n,intents.fraction))return"fraction";
+  if(containsAny(n,intents.ratio))return"ratio";
+  if(containsAny(n,intents.geometry))return"geometry";
+  if(containsAny(n,intents.probability))return"probability";
+  if(containsAny(n,intents.data))return"data";
+
+  return null;
+
+}
+
+
+/* ============================================================
+   AI RESPONSE CORE
+============================================================ */
+
+function aiRespond(raw){
+
+  const text=raw.trim();
+
+  const ar=normalizeArabic(text);
+  const en=normalizeEnglish(text);
+
+  const lang=sameLanguage(text);
+
+  /* hearts / emotional casual input */
+
+  if(
+    text.includes("❤️") ||
+    text.includes("❤") ||
+    text.includes("🫶") ||
+    text.includes("💙") ||
+    text.includes("💜")
+  ){
+
+    return lang==="en"
+      ? "That’s sweet 😄 What would you like to work on?"
+      : "هههه وصلت 😄❤️ شو بدك نشتغل عليه؟";
+
+  }
+
+  /* greetings */
+
+  if(
+    containsAny(ar,intents.greeting) ||
+    containsAny(en,intents.greeting)
+  ){
+
+    return lang==="en"
+      ? "Hey! I’m NEXA. Ask me about math, a lesson, a problem, an idea you don’t understand, or just tell me what you’re stuck on."
+      : "أهلًاا 😄 أنا NEXA. اسألني عن الرياضيات، أي درس، أي مسألة، أو حتى احكيلي شو اللي مش فاهمه وأنا بحاول أوصلك للفكرة.";
+
+  }
+
+  /* thanks */
+
+  if(
+    containsAny(ar,intents.thanks) ||
+    containsAny(en,intents.thanks)
+  ){
+
+    return lang==="en"
+      ? "You’re welcome. Keep going — understanding one idea properly makes the next one much easier."
+      : "العفو ❤️ كمل، لأنك لما تفهم فكرة وحدة صح، اللي بعدها بتصير أسهل بكثير.";
+
+  }
+
+  /* identity */
+
+  if(
+    containsAny(ar,intents.identity) ||
+    containsAny(en,intents.identity)
+  ){
+
+    return lang==="en"
+      ? "I’m NEXA AI, the learning intelligence inside this platform. I’m designed to explain mathematics, solve problems step by step, give hints, create examples, and adapt explanations to what you’re struggling with."
+      : "أنا NEXA AI، الذكاء التعليمي داخل المنصة. دوري أشرح الرياضيات، أحل المسائل خطوة خطوة، أعطي تلميحات، أجيب أمثلة، وأغيّر طريقة الشرح إذا الطريقة الأولى ما نفعت.";
+
+  }
+
+  /* capability */
+
+  if(
+    containsAny(ar,intents.capability) ||
+    containsAny(en,intents.capability)
+  ){
+
+    return lang==="en"
+      ? "I can work with arithmetic, square roots, equations, fractions, ratios, geometry, data, probability, word problems, explanations, hints, examples, and general study questions. Try me with an actual problem."
+      : "بقدر أتعامل مع الحساب، الجذور، المعادلات، الكسور، النسب والتناسب، الهندسة، البيانات، الاحتمال، والمسائل الكلامية، وكمان الشرح والتلميحات والأمثلة. جرّبني بسؤال حقيقي.";
+
+  }
+
+  /* casual talk */
+
+  if(
+    containsAny(ar,intents.chat) ||
+    containsAny(en,intents.chat)
+  ){
+
+    return lang==="en"
+      ? "Of course 😄 We can talk. If you want, tell me what you’re learning or what’s confusing you, and we’ll figure it out together."
+      : "أكيد 😄 احكي براحتك. وإذا بدك نربط الكلام بالدراسة، احكيلي شو بتتعلم أو شو اللي موقفك وأنا بمشي معك خطوة خطوة.";
+
+  }
+
+  /* goodbye */
+
+  if(
+    containsAny(ar,intents.goodbye) ||
+    containsAny(en,intents.goodbye)
+  ){
+
+    return lang==="en"
+      ? "See you! Keep practicing."
+      : "مع السلامة ❤️ بالتوفيق، ونشوفك بالدرس الجاي.";
+
+  }
+
+  /* arithmetic */
+
+  const arithmetic=solveArithmetic(text);
+
+  if(arithmetic!==null){
+
+    return lang==="en"
+      ? `The result is <strong>${formatNumber(arithmetic)}</strong>.<br><br>I evaluated the arithmetic expression directly.`
+      : `الناتج هو <strong>${formatNumber(arithmetic)}</strong>.<br><br>حسبت التعبير الرياضي مباشرة.`;
+
+  }
+
+  /* square root */
+
+  const root=sqrtEngine(text);
+
+  if(root){
+
+    if(root.exact){
+
+      return lang==="en"
+        ? `√${root.n} = <strong>${root.r}</strong>.<br><br>Why? Because <span class="formula">${root.r} × ${root.r} = ${root.n}</span>`
+        : `√${root.n} = <strong>${root.r}</strong>.<br><br>ليش؟ لأن <span class="formula">${root.r} × ${root.r} = ${root.n}</span>`;
+
+    }
+
+    return lang==="en"
+      ? `√${root.n} is approximately <strong>${root.r.toFixed(3)}</strong>.<br><br>It lies between ${Math.floor(root.r)} and ${Math.ceil(root.r)} because ${Math.floor(root.r)}² < ${root.n} < ${Math.ceil(root.r)}².`
+      : `√${root.n} تقريبًا <strong>${root.r.toFixed(3)}</strong>.<br><br>وهو بين ${Math.floor(root.r)} و${Math.ceil(root.r)} لأن ${Math.floor(root.r)}² < ${root.n} < ${Math.ceil(root.r)}².`;
+
+  }
+
+  /* linear equation */
+
+  const equation=solveLinear(text);
+
+  if(equation){
+
+    const x=formatNumber(equation.x);
+
+    return lang==="en"
+      ? `
+        <strong>Let’s solve it step by step.</strong><br><br>
+        We have:
+        <span class="formula">${equation.a}x ${equation.b>=0?"+ "+equation.b:equation.b} = ${equation.c}</span>
+        Move the constant to the other side, then divide by the coefficient.<br><br>
+        <span class="formula">x = ${x}</span>
+        <strong>Answer: x = ${x}</strong>
+      `
+      : `
+        <strong>خلينا نحلها خطوة خطوة.</strong><br><br>
+        عندنا:
+        <span class="formula">${equation.a}x ${equation.b>=0?"+ "+equation.b:equation.b} = ${equation.c}</span>
+        ننقل العدد الثابت للطرف الثاني، وبعدها نقسم على معامل x.<br><br>
+        <span class="formula">x = ${x}</span>
+        <strong>الإجابة: x = ${x}</strong>
+      `;
+
+  }
+
+  /* intent: explain */
+
+  if(
+    containsAny(ar,intents.explain) ||
+    containsAny(en,intents.explain)
+  ){
+
+    const topic=detectTopic(text);
+
+    return explainTopic(topic,lang,text);
+
+  }
+
+  /* easy */
+
+  if(
+    containsAny(ar,intents.easy) ||
+    containsAny(en,intents.easy)
+  ){
+
+    const topic=detectTopic(text);
+
+    return easyTopic(topic,lang);
+
+  }
+
+  /* example */
+
+  if(
+    containsAny(ar,intents.example) ||
+    containsAny(en,intents.example)
+  ){
+
+    const topic=detectTopic(text);
+
+    return exampleTopic(topic,lang);
+
+  }
+
+  /* hint */
+
+  if(
+    containsAny(ar,intents.hint) ||
+    containsAny(en,intents.hint)
+  ){
+
+    const topic=detectTopic(text);
+
+    return hintTopic(topic,lang);
+
+  }
+
+  /* solve */
+
+  if(
+    containsAny(ar,intents.solve) ||
+    containsAny(en,intents.solve)
+  ){
+
+    return solveRequest(text,lang);
+
+  }
+
+  /* topic direct */
+
+  const topic=detectTopic(text);
+
+  if(topic){
+
+    return explainTopic(topic,lang,text);
+
+  }
+
+  /* lesson */
+
+  if(
+    containsAny(ar,intents.lesson) ||
+    containsAny(en,intents.lesson)
+  ){
+
+    if(state.currentLesson){
+
+      return lang==="en"
+        ? `You are currently studying <strong>${state.currentLesson.title}</strong>. Ask me what part you don’t understand and I’ll explain it in another way.`
+        : `أنت حاليًا تدرس <strong>${state.currentLesson.title}</strong>. احكيلي أي جزء مش واضح، وأنا أشرحه لك بطريقة ثانية.`;
+
+    }
+
+    return lang==="en"
+      ? "Open a lesson first and I’ll connect my explanation to it."
+      : "افتح درس أول، وأنا بربط شرحي مباشرة بالدرس اللي تدرسه.";
+
+  }
+
+  /* positive */
+
+  if(
+    containsAny(ar,intents.positive) ||
+    containsAny(en,intents.positive)
+  ){
+
+    return lang==="en"
+      ? "😄 Let’s keep going. Give me a problem and I’ll try to break it down."
+      : "😄 يلااا نكمل. أعطيني مسألة أو فكرة، وأنا بحاول أفككها معك.";
+
+  }
+
+  /* fallback */
+
+  return broadFallback(text,lang);
+
+}
+
+
+/* ============================================================
+   TOPIC RESPONSES
+============================================================ */
+
+function explainTopic(topic,lang,text){
+
+  const responses={
+
+    root:{
+      ar:`
+        <strong>الجذر التربيعي بطريقة سهلة:</strong><br><br>
+        الجذر التربيعي يسأل: "ما العدد الذي إذا ضربته بنفسه يعطيني العدد الموجود؟"<br><br>
+        <span class="formula">√64 = 8</span>
+        لأن:
+        <span class="formula">8 × 8 = 64</span>
+        <br>
+        وإذا لم يكن العدد مربعًا كاملًا، نحدد بين أي عددين يقع الجذر.
+      `,
+      en:`
+        <strong>Square roots, simply:</strong><br><br>
+        A square root asks: "What number multiplied by itself gives this number?"<br><br>
+        <span class="formula">√64 = 8</span>
+        because:
+        <span class="formula">8 × 8 = 64</span>
+        <br>
+        If the number is not a perfect square, we can locate its root between two nearby integers.
+      `
+    },
+
+    square:{
+      ar:`
+        <strong>المربع الكامل:</strong><br><br>
+        هو عدد ينتج من ضرب عدد صحيح في نفسه.<br><br>
+        <span class="formula">7² = 49</span>
+        لذلك 49 مربع كامل، و√49 = 7.
+      `,
+      en:`
+        <strong>Perfect square:</strong><br><br>
+        A perfect square is a number made by multiplying an integer by itself.<br><br>
+        <span class="formula">7² = 49</span>
+        So 49 is a perfect square and √49 = 7.
+      `
+    },
+
+    equation:{
+      ar:`
+        <strong>المعادلة:</strong><br><br>
+        فكر فيها كتوازن. أي عملية تعملها على طرف، يجب أن تعملها على الطرف الآخر.<br><br>
+        مثال:
+        <span class="formula">2x + 6 = 14</span>
+        نطرح 6:
+        <span class="formula">2x = 8</span>
+        نقسم على 2:
+        <span class="formula">x = 4</span>
+      `,
+      en:`
+        <strong>Equation:</strong><br><br>
+        Think of an equation as a balance. Whatever you do to one side, do to the other.<br><br>
+        Example:
+        <span class="formula">2x + 6 = 14</span>
+        Subtract 6:
+        <span class="formula">2x = 8</span>
+        Divide by 2:
+        <span class="formula">x = 4</span>
+      `
+    },
+
+    fraction:{
+      ar:`
+        <strong>الكسور:</strong><br><br>
+        البسط فوق، والمقام تحت. الكسر يمثل جزءًا من كل.<br><br>
+        <span class="formula">3/4</span>
+        يعني 3 أجزاء من أصل 4 أجزاء متساوية.
+      `,
+      en:`
+        <strong>Fractions:</strong><br><br>
+        The numerator is on top and the denominator is on the bottom.<br><br>
+        <span class="formula">3/4</span>
+        means 3 equal parts out of 4.
+      `
+    },
+
+    ratio:{
+      ar:`
+        <strong>النسبة والتناسب:</strong><br><br>
+        النسبة تقارن كميتين.<br><br>
+        <span class="formula">6 : 3 = 2 : 1</span>
+        <br>
+        أما التناسب فهو مساواة بين نسبتين.
+      `,
+      en:`
+        <strong>Ratios and proportions:</strong><br><br>
+        A ratio compares two quantities.<br><br>
+        <span class="formula">6 : 3 = 2 : 1</span>
+        <br>
+        A proportion states that two ratios are equal.
+      `
+    },
+
+    geometry:{
+      ar:`
+        <strong>الهندسة:</strong><br><br>
+        إذا كنت تقصد الزوايا، المساحة، المحيط أو شكلًا معينًا، اكتب المسألة نفسها وسأحدد القاعدة المناسبة بدل أن أعطيك قانونًا عشوائيًا.
+      `,
+      en:`
+        <strong>Geometry:</strong><br><br>
+        If you mean angles, area, perimeter, or a specific shape, send me the actual problem and I’ll identify the correct relationship instead of throwing random formulas at you.
+      `
+    },
+
+    data:{
+      ar:`
+        <strong>تحليل البيانات:</strong><br><br>
+        المتوسط = مجموع القيم ÷ عددها.<br>
+        الوسيط = القيمة الوسطى بعد الترتيب.<br>
+        المنوال = الأكثر تكرارًا.<br>
+        المدى = أكبر قيمة − أصغر قيمة.
+      `,
+      en:`
+        <strong>Data analysis:</strong><br><br>
+        Mean = sum of values ÷ number of values.<br>
+        Median = middle value after sorting.<br>
+        Mode = most frequent value.<br>
+        Range = maximum − minimum.
+      `
+    },
+
+    probability:{
+      ar:`
+        <strong>الاحتمال:</strong><br><br>
+        عندما تكون النتائج متساوية الاحتمال:
+        <span class="formula">P = الحالات المطلوبة / الحالات الكلية</span>
+        <br>
+        والقيمة تكون بين 0 و1.
+      `,
+      en:`
+        <strong>Probability:</strong><br><br>
+        When outcomes are equally likely:
+        <span class="formula">P = favorable outcomes / total outcomes</span>
+        <br>
+        The probability is between 0 and 1.
+      `
+    }
+
+  };
+
+  if(responses[topic]){
+    return responses[topic][lang==="en"?"en":"ar"];
+  }
+
+  return broadFallback(text,lang);
+
+}
+
+function easyTopic(topic,lang){
+
+  if(topic==="root"){
+
+    return lang==="en"
+      ? "Think of √ as a reverse square button. If 6² = 36, then √36 = 6."
+      : "فكر بالجذر كأنه زر عكس التربيع. إذا 6² = 36، إذن √36 = 6.";
+
+  }
+
+  if(topic==="equation"){
+
+    return lang==="en"
+      ? "Imagine x is locked in a box. Your job is to remove everything around it until only x remains."
+      : "تخيل إن x محبوسة داخل صندوق. مهمتك تشيل الأشياء اللي حولها خطوة خطوة لحد ما تبقى x لحالها.";
+
+  }
+
+  if(topic==="ratio"){
+
+    return lang==="en"
+      ? "A ratio is simply a comparison. If there are 2 red balls and 4 blue balls, red:blue = 2:4 = 1:2."
+      : "النسبة ببساطة مقارنة. إذا عندك كرتين حمرا و4 زرق، النسبة أحمر:أزرق = 2:4 = 1:2.";
+
+  }
+
+  return lang==="en"
+    ? "Let’s make it simpler. Tell me the exact part that feels confusing."
+    : "خلينا نبسطها أكثر. احكيلي بالضبط أي جزء حاسه معقد وأنا بفككه لك.";
+
+}
+
+function exampleTopic(topic,lang){
+
+  if(topic==="root"){
+
+    return lang==="en"
+      ? `
+        Example:<br><br>
+        <span class="formula">√100</span>
+        Ask: what number × itself = 100?<br>
+        <span class="formula">10 × 10 = 100</span>
+        So <strong>√100 = 10</strong>.
+      `
+      : `
+        مثال:<br><br>
+        <span class="formula">√100</span>
+        اسأل: أي عدد × نفسه = 100؟<br>
+        <span class="formula">10 × 10 = 100</span>
+        إذن <strong>√100 = 10</strong>.
+      `;
+
+  }
+
+  if(topic==="equation"){
+
+    return lang==="en"
+      ? `
+        Example:<br><br>
+        <span class="formula">4x + 3 = 19</span>
+        <br>
+        Subtract 3 → <span class="formula">4x = 16</span>
+        <br>
+        Divide by 4 → <span class="formula">x = 4</span>
+      `
+      : `
+        مثال:<br><br>
+        <span class="formula">4x + 3 = 19</span>
+        <br>
+        نطرح 3 → <span class="formula">4x = 16</span>
+        <br>
+        نقسم على 4 → <span class="formula">x = 4</span>
+      `;
+
+  }
+
+  return lang==="en"
+    ? "Give me a topic and I’ll create an example around it."
+    : "اعطيني اسم الفكرة وأنا أعطيك مثال عليها.";
+
+}
+
+function hintTopic(topic,lang){
+
+  if(topic==="root"){
+
+    return lang==="en"
+      ? "Hint: don't calculate √ directly. Ask yourself which integer multiplied by itself gives the number."
+      : "تلميح: لا تحاول تخمين الجذر مباشرة. اسأل نفسك: أي عدد إذا ضربته بنفسه يعطيني العدد؟";
+
+  }
+
+  if(topic==="equation"){
+
+    return lang==="en"
+      ? "Hint: your goal is to isolate x. Undo the operations around x in reverse order."
+      : "تلميح: هدفك تعزل x. اعكس العمليات الموجودة حولها، وبالترتيب العكسي.";
+
+  }
+
+  return lang==="en"
+    ? "Hint: identify what the question gives you and what it asks for before choosing a formula."
+    : "تلميح: حدد أولًا شو المعطى وشو المطلوب قبل ما تختار القانون.";
+
+}
+
+function solveRequest(text,lang){
+
+  const nums=numberList(text);
+
+  if(nums.length>=2){
+
+    return lang==="en"
+      ? `I can solve it, but I need the mathematical relationship too. For example: "solve 3x + 5 = 20" or "calculate 12 × 7".`
+      : `بقدر أحلها، بس لازم أعرف العلاقة الرياضية كمان. اكتب مثلًا: "حل 3x + 5 = 20" أو "احسب 12 × 7".`;
+
+  }
+
+  return lang==="en"
+    ? "Send me the full problem exactly as you have it, and I’ll break it into steps."
+    : "ابعثلي المسألة كاملة مثل ما هي، وأنا بفككها معك خطوة خطوة.";
+
+}
+
+function broadFallback(text,lang){
+
+  if(lang==="en"){
+
+    return `
+      I’m following you. Try giving me a little more detail.<br><br>
+      You can ask me things like:<br>
+      • Explain square roots simply.<br>
+      • Solve 3x + 7 = 22.<br>
+      • Give me an example of ratios.<br>
+      • I don't understand probability.<br>
+      • Give me a hint, not the answer.<br><br>
+      You can also write naturally — you don't need special commands.
+    `;
+
+  }
+
+  return `
+    فاهم عليك، بس بدي معلومة صغيرة أكثر عشان أحدد قصدك بالضبط.<br><br>
+    جرّب مثلًا تكتب:<br>
+    • اشرحلي الجذور بطريقة سهلة<br>
+    • حل 3x + 7 = 22<br>
+    • أعطيني مثال على النسب<br>
+    • أنا مش فاهم الاحتمال<br>
+    • أعطيني تلميح بدون الحل<br><br>
+    وما تحتاج تكتب بصيغة معينة، احكي بطريقتك العادية.
+  `;
+
+}
+
+function formatNumber(n){
+
+  if(Number.isInteger(n))return String(n);
+
+  return Number(n.toFixed(8)).toString();
+
+}
+
+
+/* ============================================================
+   CHAT
+============================================================ */
+
+function addMessage(role,html){
+
+  const chat=document.getElementById("chat");
+
+  const welcome=chat.querySelector(".welcome");
+
+  if(welcome)welcome.remove();
+
+  const wrap=document.createElement("div");
+
+  wrap.className="message "+role;
+
+  wrap.innerHTML=`
+
+    <div class="avatar">
+      ${role==="ai"?"NX":"YOU"}
+    </div>
+
+    <div class="bubble">
+      ${html}
+    </div>
+
+  `;
+
+  chat.appendChild(wrap);
+
+  chat.scrollTop=chat.scrollHeight;
+
+}
+
+function quickAsk(text){
+
+  document.getElementById("aiInput").value=text;
+
+  sendAI();
+
+}
+
+function sendAI(){
+
+  const input=document.getElementById("aiInput");
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  addMessage("user",escapeHTML(text));
+
+  input.value="";
+  input.style.height="40px";
+
+  const thinking=document.getElementById("thinking");
+
+  thinking.classList.add("show");
+
+  const delay=1800+Math.floor(Math.random()*1500);
+
+  setTimeout(()=>{
+
+    const response=aiRespond(text);
+
+    thinking.classList.remove("show");
+
+    addMessage("ai",response);
+
+    state.memory.push({
+      user:text,
+      ai:response,
+      time:Date.now()
+    });
+
+    saveState();
+
+  },delay);
+
+}
+
+function escapeHTML(text){
+
+  return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+document.querySelectorAll(".nav button").forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    showView(button.dataset.view);
+
+    if(button.dataset.view==="curriculum"){
+      renderCurriculum();
+    }
+
+    if(button.dataset.view==="profile"){
+      updateStats();
+    }
+
+    document.getElementById("sidebar").classList.remove("open");
+
+  });
+
+});
+
+
+/* ============================================================
+   INPUT
+============================================================ */
+
+const aiInput=document.getElementById("aiInput");
+
+aiInput.addEventListener("input",function(){
+
+  this.style.height="40px";
+
+  this.style.height=Math.min(this.scrollHeight,120)+"px";
+
+});
+
+aiInput.addEventListener("keydown",function(e){
+
+  if(e.key==="Enter" && !e.shiftKey){
+
+    e.preventDefault();
+    sendAI();
+
+  }
+
+});
+
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+function init(){
+
+  renderCurriculum();
+  updateStats();
+
+}
+
+init();
+
+</script>
+
+</body>
+</html>
